@@ -1,4 +1,3 @@
-
 ## ici on scrape wikipédia pour obtenir la listes des coureurs ayant obtenu des "prix sepeciaux"
 
 import requests
@@ -10,17 +9,17 @@ url = "https://fr.wikipedia.org/wiki/Palmar%C3%A8s_du_Tour_de_France"
 
 # Récupérer le contenu de la page
 response = requests.get(url)
-soup = BeautifulSoup(response.content, 'html.parser')
+soup = BeautifulSoup(response.content, "html.parser")
 
 # Trouver le tableau "Palmarès complet"
-table = soup.find('table', {'class': 'wikitable'})
+table = soup.find("table", {"class": "wikitable"})
 assert table != None
 
 # Extraire les données du tableau
-rows = table.find_all('tr') # type: ignore
+rows = table.find_all("tr")  # type: ignore
 data = []
 for row in rows:
-    cols = row.find_all(['th', 'td'])
+    cols = row.find_all(["th", "td"])
     cols = [ele.text.strip() for ele in cols]
     data.append(cols)
 
@@ -30,12 +29,16 @@ df.columns = df.iloc[0]  # Définir la première ligne comme en-tête
 df = df.drop(df.index[0])  # Supprimer la première ligne (en-tête)
 
 # Sélectionner uniquement les colonnes souhaitées
-selected_columns = ['Grand Prix de la montagne', 'Par points', 'Meilleur jeune', 'Prix de la combativité']
+selected_columns = [
+    "Grand Prix de la montagne",
+    "Par points",
+    "Meilleur jeune",
+    "Prix de la combativité",
+]
 df_selected = df[selected_columns]
 
 # Afficher le DataFrame
 print(df_selected)
 
 # Enregistrer le DataFrame dans un fichier CSV
-df_selected.to_csv('palmares_tour_de_france_selected_columns.csv', index=False)
-
+df_selected.to_csv("palmares_tour_de_france_selected_columns.csv", index=False)
